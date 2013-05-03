@@ -1,0 +1,5 @@
+C:\Users\tyler.speakman\Documents\Visual Studio 2012\Projects\com.onebuttonglutton\Video\bin\Video.dll
+C:\Users\tyler.speakman\Documents\Visual Studio 2012\Projects\com.onebuttonglutton\Video\bin\Video.pdb
+C:\Users\tyler.speakman\Documents\Visual Studio 2012\Projects\com.onebuttonglutton\Video\obj\Debug\Video.csprojResolveAssemblyReference.cache
+C:\Users\tyler.speakman\Documents\Visual Studio 2012\Projects\com.onebuttonglutton\Video\obj\Debug\Video.dll
+C:\Users\tyler.speakman\Documents\Visual Studio 2012\Projects\com.onebuttonglutton\Video\obj\Debug\Video.pdb
