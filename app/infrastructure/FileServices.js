@@ -1,4 +1,4 @@
-﻿define(["infrastructure/AjaxQueueServices"], function (ajaxQueue) {
+﻿define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
     console.log("/app/infrastructure/FileServices.js");
 
     // NOTE: Requires chrome to start with "--allow-file-access-from-files"
@@ -6,7 +6,7 @@
         var promise = $.Deferred();
         var url = path.replace(/\\/gi, "/");
 
-        ajaxQueue.append(url)
+        ajaxQueueServices.append("file:///" + url)
             .then(handleUrlResponse)
             .done(handleUrlResponseSuccess)
             .fail(handleUrlResponseFailure);
@@ -51,6 +51,9 @@
         }
 
         function handleUrlResponseFailure(jqXHR, textStatus) {
+            if (jqXHR.statusText.indexOf('"Access to restricted URI denied"  code: "1012" nsresult: "0x805303f4 (NS_ERROR_DOM_BAD_URI)"') > -1) {
+                console.log('If you are using Firefox, then please activate.. ???????');
+            }
             var fsEntity = new InaccessibleFsEntity();
             fsEntity.parent = parent;
             parent.isAccessible = false;
@@ -785,7 +788,7 @@
         var self = this;
 
         self.name = o.name || "";
-        self.path = encodeURIComponent(decodeURIComponent(o.path));
+        self.path = decodeURIComponent(o.path);//encodeURIComponent(decodeURIComponent(o.path));
         self.parent = o.parent;
 
         self.isFile = o.isFile;

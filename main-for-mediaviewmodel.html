@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Media Services</title>
+
+    <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/knockout-2.2.1.debug.js"></script>
+    <script src="scripts/underscore.js"></script>
+    <script src="scripts/toastr.js"></script>
+    <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/require.js" data-main="app/main-for-mediaviewmodel"></script>
+
+    <link href="content/bootstrap.css" rel="stylesheet" />
+    <link href="content/toastr.css" rel="stylesheet" />
+
+    <link href="content/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="navbar navbar-fixed-top">
+        <a class="brand" href="#">Media Services</a>
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="navbar-search pull-left">
+                    <input data-bind="value: search" placeholder="Search" class="search-query" autofocus="autofocus" type="text" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <header id="overview">
+        <div class="container">
+            <h1>Media Services</h1>
+            <p class="lead">Grab metadata for a variety of media.</p>
+            <ul>
+                <li><a href="https://github.com/cgiffard/Captionator">CaptionatorJS</a></li>
+                <li><a href="http://popcornjs.org/">PopcornJS</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="container">
+
+        <div class="row">
+            <div class="span12">
+                <div class="tabbable tabs-left">
+                    <ul data-bind="foreach: searchResults" class="nav nav-tabs">
+                        <li data-bind="css: { 'active': $index() === 0 }">
+                            <a data-bind="attr: { href: '#' + $data.imdb_id }" data-toggle="tab">
+                                <span data-bind="    html: title"></span>
+                                <span data-bind="    text: year" class="label label-info"></span>
+                                <span data-bind="    text: rating" class="label label-info"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div data-bind="foreach: searchResults" class="tab-content">
+                        <div data-bind="attr: { id: $data.imdb_id }, css: { 'active': $index() === 0 }" class="tab-pane">
+                            <div class="row">
+                                <div class="span3">
+                                    <img data-bind="attr: { src: $data.poster, alt: $data.title }" class="img-polaroid" />
+                                </div>
+                                <div class="span3">
+                                    <span data-bind="    text: $data.plot_simple"></span>
+                                    <ul data-bind="foreach: $data.genres">
+                                        <li><span data-bind="    text: $data"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!--    <script>
+        /*global console, require*/
+        requirejs.config({
+            baseUrl: 'app'
+        });
+        require(["infrastructure/MediaServices"], function (mediaServices) {
+            console.log("/Main-for-MediaServices.html");
+
+            mediaServices.searchByTitle("Dark City").then(callback);
+
+            function callback(responseText, statusText, jqXHR) {
+                //var a = eval(responseText)
+                //var a = JSON.parse(responseText);
+                console.log(arguments);
+            }
+        });
+
+        //http://imdbapi.org/?title=test&type=json&plot=simple&episode=1&limit=10&yg=0&mt=none&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0
+    </script>
+        <script>
+        //function callback() {
+        //    console.log(arguments);
+        //}
+        //$.ajax({
+        //    url: "http://www.imdb.com/find?q=test",
+        //    dataType: "jsonp",
+        //    jsonpCallback: "jsonpCallback",
+        //    jsonp: callback
+        //})
+        //    .always(callback);
+    </script>
+        <script>
+    </script>-->

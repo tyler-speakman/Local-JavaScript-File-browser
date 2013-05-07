@@ -1,0 +1,5 @@
+C:\Users\tyler.speakman\Documents\GitHub\Local-JavaScript-File-browser\bin\Video.dll
+C:\Users\tyler.speakman\Documents\GitHub\Local-JavaScript-File-browser\bin\Video.pdb
+C:\Users\tyler.speakman\Documents\GitHub\Local-JavaScript-File-browser\obj\Debug\Local-JavaScript-File-browser.csprojResolveAssemblyReference.cache
+C:\Users\tyler.speakman\Documents\GitHub\Local-JavaScript-File-browser\obj\Debug\Video.dll
+C:\Users\tyler.speakman\Documents\GitHub\Local-JavaScript-File-browser\obj\Debug\Video.pdb
