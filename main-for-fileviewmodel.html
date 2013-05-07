@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>File Services</title>
+
+    <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/knockout-2.2.1.debug.js"></script>
+    <script src="scripts/underscore.js"></script>
+    <script src="scripts/toastr.js"></script>
+    <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/require.js" data-main="app/main-for-fileviewmodel"></script>
+
+    <link href="content/bootstrap.css" rel="stylesheet" />
+    <link href="content/toastr.css" rel="stylesheet" />
+
+    <link href="content/site.css" rel="stylesheet" />
+    <style type="text/css">
+        .fs-entity, .divider {
+            cursor: default;
+        }
+
+        .fs-entity-folder, .active .fs-entity-folder {
+            cursor: pointer;
+        }
+
+        .fs-entity-folder {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar navbar-fixed-top">
+        <a class="brand" href="#">File Services</a>
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav">
+                    <li>
+                        <ul class="breadcrumb span12" data-bind="foreach: currentFsEntityAncestry" style='margin: 0px;'>
+                            <li data-bind="css: { active: isLast, 'not-clickable': isLast }" style='margin: 0px;'>
+                                <!-- ko if: isFirst -->
+                                <i class="icon-folder-open"></i>
+                                <!-- /ko -->
+                                <span data-bind="text: name, css: { 'fs-entity': !isLast(), 'fs-entity-folder': !isLast() }"></span>
+                                <!-- ko ifnot: isLast -->
+                                <span class="divider">\</span>
+                                <!-- /ko -->
+                                <!-- ko if: isLast -->
+                                <span class="badge badge-info" data-bind="text: currentFsDirectoryChildren().length"></span>
+                                <!-- /ko -->
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <header id="overview">
+        <div class="container">
+            <h1>File Services</h1>
+            <p class="lead">Navigate your local file system.</p>
+        </div>
+    </header>
+    <div class="container">
+
+        <div class="row">
+            <div class="span12">
+                <ul class="breadcrumb">
+                    <li>
+                        <button data-bind="click: handleAddSearchFilterClick" class="btn" style="margin: 0px 0px 10px 0px;"><i class="icon-filter"></i></button>
+                    </li>
+                    <!--ko foreach: currentSearchFilter-->
+                    <li class="dropdown input-append">
+                        <ul class="dropdown-menu">
+                            <li data-bind="css: { active: key == 'name' }"><a data-bind="    click: handleSearchFilterKeyChange.bind($data, 'name')" href="#">Name</a></li>
+                            <li data-bind="css: { active: key == 'type' }"><a data-bind="    click: handleSearchFilterKeyChange.bind($data, 'type')" href="#">Type</a></li>
+                        </ul>
+                        <input data-bind="value: value, event: { change: refreshCurrentFsDirectory }" type="text" placeholder="Search" class="input-small" />
+                        <span class="dropdown-toggle add-on btn" data-toggle="dropdown">
+                            <!-- ko if: key == 'name' -->
+                            <span class="label label-info">name</span>
+                            <!-- /ko -->
+                            <!-- ko if: key == 'type' -->
+                            <span class="label label-info">type</span>
+                            <!-- /ko -->
+                            <span class="caret"></span>
+                        </span>
+                        <a data-bind="click: handleRemoveSearchFilterClick.bind($data)" class="btn add-on" style="margin-top: 0px;"><i class="icon-minus-sign"></i></a>
+                    </li>
+                    <li><span class="divider">&amp;</span></li>
+                    <!-- /ko -->
+                    <li><span class="divider">..</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                <ul data-bind="foreach: currentFsDirectoryChildren" class="nav nav-list">
+                    <li>
+                        <a data-bind="css: { 'fs-entity-folder': $data.isFolder }" class="fs-entity">
+                            <i data-bind="
+    css: {
+        'icon-folder-close': $data.isFolder && !$data.isUpDir,
+        'icon-file': $data.isFile && !$data.isVideo && !$data.isAudio && !$data.isImage,
+        'icon-film': $data.isVideo,
+        'icon-music': $data.isAudio,
+        'icon-picture': $data.isImage
+    }"></i>&nbsp;
+                            <span data-bind="text: $data.name"></span>
+                            <i data-bind="css: { 'icon-exclamation-sign': !$data.isAccessible }"></i>
+                            <span data-bind="with: $data.size" class="label label-info"><span data-bind="    text: $data"></span></span>
+                            <span data-bind="with: $data.lastModifiedDate" class="label label-info"><span data-bind="    text: $data.toLocaleDateString()"></span></span>
+                            <span data-bind="with: $data.type, click: addSearchFilter.bind($data, { key: 'type', value: $data.type })" class="label label-info clickable"><span data-bind="    text: $data"></span></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
