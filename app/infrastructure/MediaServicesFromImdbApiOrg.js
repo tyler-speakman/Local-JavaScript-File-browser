@@ -1,27 +1,70 @@
 ﻿/*global console, define*/
-define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
-    console.log("/app/infrastructure/MediaServicesFromImdbApiOrg.js");
+define([
+        "infrastructure/LogServices",
+        'models/MediaModels',
+        "infrastructure/AjaxQueueServices"
+], function (logServices, mediaModels, ajaxQueueServices) {
+    log();
 
     return {
-        searchByTitle: searchByTitle
+        searchByTitle: searchByTitle,
+        getDetailsById: getDetailsById
     };
 
-    var constants = {
-        Output: { JSON: "json", JSONP: "jsonp", XML: "" },
-        Plot: { None: "none", Simple: "simple", Full: "full" },
-        Episode: { None: "none", Simple: "simple", Full: "full" },
-        Limit: { "1": 1, "2": 2, "3": 3, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10 },
-        YG: { Disabled: 0, Enabled: 1 },
-        mt: { "None": "none", "Movie": "M", "TV Series": "TVS", "TV Movie": "TV", "Video": "V", "Video Game": "VG" },
+    //var constants = {
+    //    Output: { JSON: "json", JSONP: "jsonp", XML: "" },
+    //    Plot: { None: "none", Simple: "simple", Full: "full" },
+    //    Episode: { None: "none", Simple: "simple", Full: "full" },
+    //    Limit: { "1": 1, "2": 2, "3": 3, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10 },
+    //    YG: { Disabled: 0, Enabled: 1 },
+    //    mt: { "None": "none", "Movie": "M", "TV Series": "TVS", "TV Movie": "TV", "Video": "V", "Video Game": "VG" },
 
-        Lang: { "en-US": "en-US", "zh-CN": "zh-CN" },
-        Aka: { Simple: "simple", Full: "full" },
-        Release: { Simple: "simple", Full: "full" },
-        Business: { Disabled: 0, Enabled: 1 },
-        Technical: { Disabled: 0, Enabled: 1 }
-    };
+    //    Lang: { "en-US": "en-US", "zh-CN": "zh-CN" },
+    //    Aka: { Simple: "simple", Full: "full" },
+    //    Release: { Simple: "simple", Full: "full" },
+    //    Business: { Disabled: 0, Enabled: 1 },
+    //    Technical: { Disabled: 0, Enabled: 1 }
+    //};
+
+    function getDetailsById(id) {
+        log("getDetailsById(id: " + id + ")");
+        var promise = $.Deferred();
+        ajaxQueueServices.append({ url: "http://imdbapi.org/", data: { id: id }, dataType: "json" })
+            .then(handleResponse)
+            .fail(handleResponseFailure);
+
+        return promise;
+
+        //#region Internal Methods
+
+        function handleResponse(response, statusText, jqXHR) {
+            log("getDetailsById(id: " + id + ").handleResponse(response: " + response + ")");
+
+            // Validate response
+            if (response.code === 404 || response.error === "Film not found") {
+                // If video isn't found, then reject promise
+                promise.reject(response);
+                return;
+            }
+
+            // If videos are found, then initalize standard object and map response object onto it
+            response = mapToVideo(response);
+            response = mediaModels.mapToVideo(response);
+
+            promise.resolve(response);
+
+            return response;
+        }
+
+        function handleResponseFailure(jqXHR, textStatus) {
+            promise.reject([]);
+        }
+
+        //#endregion
+    }
 
     function searchByTitle(title) {
+        log("searchByTitle(title: " + title + ")");
         var searchOptions = {};//{ q: "", type: "", plot: "", episode: "", limit: "", year: "", yg: "", mt: "", lang: "", offset: "", aka: "", release: "", business: "", technical: "" }
         searchOptions.q = title;
         searchOptions.limit = 5;
@@ -29,35 +72,40 @@ define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
         return search(searchOptions);
     }
 
-    function search(options) {
+    function search(data) {
+        log("search(..)");
         var promise = $.Deferred();
-        ajaxQueueServices.append("http://imdbapi.org/?", options)
-            .then(handleResponseText)
-            .fail(handleResponseTextFailure);
+        ajaxQueueServices.append({ url: "http://imdbapi.org/", data: data, dataType: "json" })
+            .then(handleResponse)
+            .fail(handleResponseFailure);
 
         return promise;
 
-        function handleResponseText(responseText, statusText, jqXHR) {
+        //#region Internal Methods
+
+        function handleResponse(response, statusText, jqXHR) {
+            log("search(..).handleResponse(response: " + response + ")");
             // Validate response
-            if (responseText === '{"code":404, "error":"Film not found"}') {
+            if (response.code === 404 || response.error === "Film not found") {
                 // If video isn't found, then reject promise
-                promise.reject(JSON.parse(responseText));
+                promise.reject(response);
                 return;
             }
 
             // If videos are found, then initalize standard object and map response object onto it
-            var objects = JSON.parse(responseText);
-            var index = objects.length;
-            while (index--) {
-                objects[index] = _.extend(new Video(), objects[index]);
-            }
-            promise.resolve(objects);
-            return objects;
+            response = _(response).map(mapToPartialVideo);
+            response = _(response).map(mediaModels.mapToPartialVideo);
+
+            promise.resolve(response);
+
+            return response;
         }
 
-        function handleResponseTextFailure(jqXHR, textStatus) {
+        function handleResponseFailure(jqXHR, textStatus) {
             promise.reject([]);
         }
+
+        //#endregion
     }
 
     function Video() {
@@ -78,7 +126,7 @@ define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
         self.rated = ""; // The movie's classification and ratings.
         self.rating = -1.0; // The score of the movie on IMDb.com.
         self.rating_count = -1; // The number of voters on IMDb.com.
-        self.release_date = -1; // (simple mode)
+        self.release_date = new Date("1900/01/01"); // (simple mode)
         // self.release_date = [];// The movie's release date. Fields(full mode): year month day country remarks
         self.runtime = []; // The movie's duration.
         self.title = ""; // The movie's name.
@@ -87,5 +135,27 @@ define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
         self.year = -1; // The movie's age.
         self.business = {}; // The movie's business info. (Budget, Gross, Opening Weekend, Weekend Gross, Admissions, Filming Dates, Producation Dates, Copyright holder etc.)
         self.technical = {}; // The movie's technical info. (Camera, Laboratory, Film Length, Film negative format, Cinematographic process, Printed film format, Aspect ratio etc.)
+        self.source = "imdbapi.org";
     }
+
+    function mapToPartialVideo(value) {
+        value = _(new Video()).extend(value);
+        value.id = value.imdb_id;
+
+        value.isPartial = true;
+
+        return value;
+    }
+
+    function mapToVideo(value) {
+        value = mapToPartialVideo(value);
+        value.plot = (_(value.plot).isString() && value.plot.length > 0) ? value.plot : value.plot_simple;
+        value.trailers = [];
+
+        value.isPartial = false;
+
+        return value;
+    }
+
+    function log(message, title) { logServices.log(message, title, "/app/infrastructure/MediaServicesFromImdbApiOrg"); }
 });

@@ -6,7 +6,7 @@
         var promise = $.Deferred();
         var url = path.replace(/\\/gi, "/");
 
-        ajaxQueueServices.append("file:///" + url)
+        ajaxQueueServices.append({ url: "file:///" + url })
             .then(handleUrlResponse)
             .done(handleUrlResponseSuccess)
             .fail(handleUrlResponseFailure);

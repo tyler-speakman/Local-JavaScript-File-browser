@@ -185,12 +185,5 @@
 
     //#endregion
 
-    function log(message) {
-        if (_(message).isObject() || _(message).isArray()) {
-            log();
-            console.log(message);
-        } else {
-            console.log("(/app/infrastructure/FileViewModel) " + (message ? message : ""));
-        }
-    }
+    function log(message, title) { logServices.log(message, title, "/app/infrastructure/FileViewModel"); }
 });

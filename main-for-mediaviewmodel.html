@@ -7,6 +7,7 @@
     <script src="scripts/knockout-2.2.1.debug.js"></script>
     <script src="scripts/underscore.js"></script>
     <script src="scripts/toastr.js"></script>
+    <script src="scripts/moment.js"></script>
     <script src="scripts/bootstrap.js"></script>
     <script src="scripts/require.js" data-main="app/main-for-mediaviewmodel"></script>
 
@@ -20,12 +21,29 @@
         <a class="brand" href="#">Media Services</a>
         <div class="navbar-inner">
             <div class="container">
-                <div class="navbar-search pull-left">
-                    <input data-bind="value: search" placeholder="Search" class="search-query" autofocus="autofocus" type="text" />
+                <div class="navbar-search pull-left dropdown open">
+                    <input data-bind="value: search, hasfocus: isSearchFocused()" placeholder="Search" class="search-query dropdown-toggle" type="text" />
+                    <!-- ko if: (searchResults().length > 0)-->
+                    <select class="media-search-results dropdown-menu" data-bind="foreach: searchResults, hasfocus: !isSearchFocused(), attr: { size: Math.max(2, searchResults().length) }">
+                        <option data-bind="html: title + ' (' + year + ')'" class="media-search-result"></option>
+                    </select>
+                    <!--<ul data-bind="foreach: searchResults" class="dropdown-menu pull-left" role="menu" aria-labelledby="search-drop">
+                        <li role="presentation" data-bind="css: { 'active': $index() === 0 }, attr: { autofocus: 'autofocus' }">
+                            <a data-bind="attr: { id: $data.id }" href="#" role="button" class="video-search-result"><span data-bind="    html: title">&nbsp;</span><span data-bind="    text: year" class="label label-info"></span></a>
+                        </li>
+                    </ul>-->
+                    <!--<select data-bind="foreach: searchResults" class="dropdown-menu input-large media-search-results" role="menu" aria-labelledby="search-drop" size="5">
+                        <option role="presentation" data-bind="html: title + ' (' + year + ')'" class="media-search-result"> </option>
+                    </select>-->
+                    <!-- /ko-->
                 </div>
             </div>
         </div>
     </div>
+    <!--    <select class="media-search-results" data-bind="foreach: searchResults, hasfocus: !isSearchFocused()" size="5">
+        <option role="presentation" data-bind="html: title + ' (' + year + ')'" class="media-search-result">
+        </option>
+    </select>-->
     <header id="overview">
         <div class="container">
             <h1>Media Services</h1>
@@ -37,38 +55,111 @@
         </div>
     </header>
     <div class="container">
+        <div data-bind="with: selectedSearchResult">
+            <div class="row">
+                <div class="span9">
+                    <!--<img style="-webkit-filter: brightness(200%) grayscale(100%); background-image: url(http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500/yz9SbDQnW99ke0Nz9J8SwMy7iHJ.jpg); background-repeat: no-repeat; -moz-background-size: 100%; -o-background-size: 100%; -webkit-background-size: 100%; background-size: 100%;" />-->
+                    <div class="well">
+                        <h2>
+                            <span data-bind="    html: title"></span>&nbsp;
+                        <span data-bind="    text: year" class="label label-info"></span>
+                        </h2>
 
-        <div class="row">
+                        <div class="span2 pull-left" style="margin: 0px 10px 10px 0px;">
+                            <img data-bind="attr: { src: $data.poster, alt: $data.title }" class="img-polaroid" />
+                        </div>
+
+                        <div class="span3 pull-right" style="margin: 0px 0px 10px 10px;">
+                            <!-- ko if: !isPartial -->
+                            <!-- ko foreach: genres -->
+                            <span data-bind="    text: $data" class="label label-info"></span>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                        </div>
+
+                        <!-- ko if: !isPartial -->
+                        <span data-bind="text: plot"></span>
+                        <br />
+                        <br />
+                        <!-- ko foreach: trailers.youtube -->
+                        <iframe data-bind="attr: { src: 'http://www.youtube.com/embed/' + id }" width="640" height="390" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <ul class="breadcrumb" style="background-color: transparent;">
+            <!-- ko foreach: selectedSearchResultsHistory-->
+            <li>
+                <a class="media-search-result muted clickable"><span data-bind="    html: title"></span>&nbsp;<span data-bind="    text: year" class="label"></span></a><span class="divider">, </span>
+            </li>
+            <!-- /ko -->
+            <li>..</li>
+        </ul>
+    </div>
+    <!--<div data-bind="foreach: selectedSearchResultsHistory" class="container">
+                <a class="video-search-result muted clickable">
+            <span data-bind="    html: title"></span>
+            <span data-bind="    text: year" class="label label-info"></span>
+        </a>
+    </div>-->
+    <!--        <div class="row">
             <div class="span12">
                 <div class="tabbable tabs-left">
                     <ul data-bind="foreach: searchResults" class="nav nav-tabs">
                         <li data-bind="css: { 'active': $index() === 0 }">
-                            <a data-bind="attr: { href: '#' + $data.imdb_id }" data-toggle="tab">
+                            <a data-bind="attr: { href: '#' + $data.id }" data-toggle="tab">
                                 <span data-bind="    html: title"></span>
                                 <span data-bind="    text: year" class="label label-info"></span>
-                                <span data-bind="    text: rating" class="label label-info"></span>
                             </a>
                         </li>
                     </ul>
                     <div data-bind="foreach: searchResults" class="tab-content">
-                        <div data-bind="attr: { id: $data.imdb_id }, css: { 'active': $index() === 0 }" class="tab-pane">
+                        <div data-bind="attr: { id: $data.id }, css: { 'active': $index() === 0 }" class="tab-pane">
                             <div class="row">
                                 <div class="span3">
                                     <img data-bind="attr: { src: $data.poster, alt: $data.title }" class="img-polaroid" />
                                 </div>
                                 <div class="span3">
-                                    <span data-bind="    text: $data.plot_simple"></span>
-                                    <ul data-bind="foreach: $data.genres">
-                                        <li><span data-bind="    text: $data"></span></li>
-                                    </ul>
-                                </div>
+                                        <span data-bind="    text: $data.plot_simple"></span>
+                                        <ul data-bind="foreach: $data.genres">
+                                            <li><span data-bind="    text: $data"></span></li>
+                                        </ul>
+                                    </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="row">
+            <div class="span4">
+                <ul data-bind="foreach: searchResults" class="nav nav-list" role="navigation">
+                    <li class="dropdown">
+                        <a data-bind="attr: { id: $data.id }" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
+                            <span data-bind="html: title"></span>
+                            <span data-bind="text: year" class="label label-info"></span>
+                            <i class="caret pull-right"></i>
+                        </a>
+                        <ul data-bind="    attr: { 'aria-labelledby': $data.id }" class="dropdown-menu  pull-right" role="menu" aria-labelledby="drop1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"></a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">
+                                    <img data-bind="attr: { src: $data.poster, alt: $data.title }" class="img-polaroid span2" />
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>-->
 </body>
 </html>
 

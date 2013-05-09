@@ -75,7 +75,7 @@
                             <li data-bind="css: { active: key == 'name' }"><a data-bind="    click: handleSearchFilterKeyChange.bind($data, 'name')" href="#">Name</a></li>
                             <li data-bind="css: { active: key == 'type' }"><a data-bind="    click: handleSearchFilterKeyChange.bind($data, 'type')" href="#">Type</a></li>
                         </ul>
-                        <input data-bind="value: value, event: { change: refreshCurrentFsDirectory }" type="text" placeholder="Search" class="input-small" />
+                        <input data-bind="value: value, event: { change: refreshCurrentFsDirectory }" type="text" placeholder="Search" class="input-small" autofocus="autofocus" />
                         <span class="dropdown-toggle add-on btn" data-toggle="dropdown">
                             <!-- ko if: key == 'name' -->
                             <span class="label label-info">name</span>
