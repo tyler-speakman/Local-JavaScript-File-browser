@@ -3,6 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Local-JavaScript-File-browser", "Local-JavaScript-File-browser.csproj", "{AE731336-4F9D-4F92-8689-F370575C25A7}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "NodeJS-File-browser", "..\NodeJS-File-browser\", "{1EDFB514-4F22-498F-90FB-B18AC7915E44}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/NodeJS-File-browser"
+		Debug.AspNetCompiler.PhysicalPath = "..\NodeJS-File-browser\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\NodeJS-File-browser\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/NodeJS-File-browser"
+		Release.AspNetCompiler.PhysicalPath = "..\NodeJS-File-browser\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\NodeJS-File-browser\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "53130"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +33,10 @@ Global
 		{AE731336-4F9D-4F92-8689-F370575C25A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE731336-4F9D-4F92-8689-F370575C25A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE731336-4F9D-4F92-8689-F370575C25A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EDFB514-4F22-498F-90FB-B18AC7915E44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EDFB514-4F22-498F-90FB-B18AC7915E44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EDFB514-4F22-498F-90FB-B18AC7915E44}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EDFB514-4F22-498F-90FB-B18AC7915E44}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,12 +17,12 @@
         }
 
         function handleUrlResponseFailure(jqXHR, textStatus) {
-            if (status === 0 || statusText === "error") {
-                throw "No response from server. Is your NodeJS instance running?";
-            }
-            console.log(jqXHR);
+            console.log(JSON.stringify(jqXHR));
             console.log(textStatus);
             promise.resolve([]);
+            if (status === 0 || textStatus === "error") {
+                throw "No response from server. Is your NodeJS instance running?";
+            }
         }
 
         //#endregion
