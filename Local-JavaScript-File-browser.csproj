@@ -57,12 +57,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\infrastructure\FileServices.js" />
+    <Content Include="app\infrastructure\FileServicesFromNodeJS.js" />
     <Content Include="app\infrastructure\MediaServicesFromOmdbApiCom.js" />
     <Content Include="app\infrastructure\MediaServicesFromTheMovieDbOrg.js" />
     <Content Include="app\main-for-mediaviewmodel.js" />
     <Content Include="app\infrastructure\MediaServicesFromImdbApiOrg.js" />
     <Content Include="app\infrastructure\LogServices.js" />
-    <Content Include="app\infrastructure\FileServices.js" />
+    <Content Include="app\infrastructure\FileServicesFromChrome.js" />
     <Content Include="app\infrastructure\AjaxQueueServices.js" />
     <Content Include="app\infrastructure\MediaServices.js" />
     <Content Include="app\main-for-fileviewmodel.js" />

@@ -23,8 +23,8 @@
     });
     self.selectedFsEntity.subscribe(function (fsEntity) {
         log("selectedFsEntity.subscribe()");
-        if (fsEntity && fsEntity.isFolder) {
-            // If the entity is a folder then update the file system UI
+        if (fsEntity && fsEntity.isDirectory) {
+            // If the entity is a directory then update the file system UI
             if (fsEntity.isUpDir) {
                 // If the entity is just an "Up Directory" link, then goto it's parent's parent (think about it, I'm right)
                 self.currentFsDirectory(fsEntity.parent.parent);
@@ -46,7 +46,7 @@
         } else {
             // If the entity has not already been loaded, then load and process it
             var fsStructureRequestStartTime = new Date();
-            fileServices.getStructure(fsEntity.path, fsEntity, 0)//, { type: function (value) { return value.match((new RegExp("^video/.+$", "gi"))).length > 0; } }
+            fileServices.getStructure(fsEntity.path + fsEntity.name, fsEntity, 0)//, { type: function (value) { return value.match((new RegExp("^video/.+$", "gi"))).length > 0; } }
                 .done(function (fsStructure) {
                     if (fsStructure.name !== "NA") {
                         // If the directory is available, then sort it, apply the mimetype flags and update the UI
@@ -158,8 +158,8 @@
             // Apply recursively
             if (fsEntity.children) { fsEntity.children = applyFsSort(fsEntity.children); }
 
-            // Sort entities as follows: "Up Directory" links first, folders secound, everything else third (and of course ascending alpha-numerics)
-            return ((fsEntity.isUpDir) ? "0" : "1") + ((fsEntity.isFolder) ? "0" : "1") + fsEntity.name;
+            // Sort entities as follows: "Up Directory" links first, directorys secound, everything else third (and of course ascending alpha-numerics)
+            return ((fsEntity.isUpDir) ? "0" : "1") + ((fsEntity.isDirectory) ? "0" : "1") + fsEntity.name;
         }
 
         //#endregion

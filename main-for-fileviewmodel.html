@@ -19,11 +19,11 @@
             cursor: default;
         }
 
-        .fs-entity-folder, .active .fs-entity-folder {
+        .fs-entity-directory, .active .fs-entity-directory {
             cursor: pointer;
         }
 
-        .fs-entity-folder {
+        .fs-entity-directory {
             font-weight: bold;
         }
     </style>
@@ -41,7 +41,7 @@
                                 <!-- ko if: isFirst -->
                                 <i class="icon-folder-open"></i>
                                 <!-- /ko -->
-                                <span data-bind="text: name, css: { 'fs-entity': !isLast(), 'fs-entity-folder': !isLast() }"></span>
+                                <span data-bind="text: name, css: { 'fs-entity': !isLast(), 'fs-entity-directory': !isLast() }"></span>
                                 <!-- ko ifnot: isLast -->
                                 <span class="divider">\</span>
                                 <!-- /ko -->
@@ -98,10 +98,10 @@
             <div class="span12">
                 <ul data-bind="foreach: currentFsDirectoryChildren" class="nav nav-list">
                     <li>
-                        <a data-bind="css: { 'fs-entity-folder': $data.isFolder }" class="fs-entity">
+                        <a data-bind="css: { 'fs-entity-directory': $data.isDirectory }" class="fs-entity">
                             <i data-bind="
     css: {
-        'icon-folder-close': $data.isFolder && !$data.isUpDir,
+        'icon-folder-close': $data.isDirectory && !$data.isUpDir,
         'icon-file': $data.isFile && !$data.isVideo && !$data.isAudio && !$data.isImage,
         'icon-film': $data.isVideo,
         'icon-music': $data.isAudio,
@@ -110,7 +110,7 @@
                             <span data-bind="text: $data.name"></span>
                             <i data-bind="css: { 'icon-exclamation-sign': !$data.isAccessible }"></i>
                             <span data-bind="with: $data.size" class="label label-info"><span data-bind="    text: $data"></span></span>
-                            <span data-bind="with: $data.lastModifiedDate" class="label label-info"><span data-bind="    text: $data.toLocaleDateString()"></span></span>
+                            <span data-bind="with: $data.lastModifiedDate" class="label label-info"><span data-bind="    text: $data.toLocaleString()"></span></span>
                             <span data-bind="with: $data.type, click: addSearchFilter.bind($data, { key: 'type', value: $data.type })" class="label label-info clickable"><span data-bind="    text: $data"></span></span>
                         </a>
                     </li>

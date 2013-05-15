@@ -31,7 +31,7 @@ define(['infrastructure/FileServices', 'viewmodels/FileViewModel'], function (fi
         refreshCurrentFsDirectory();
         self.refreshCurrentSearchFilter();
     };
-    var startingFsEntity = new filesServices.FsEntity({ path: "C:", name: "C:", children: [], isFolder: true, isFile: false, isUpDir: false });
+    var startingFsEntity = new filesServices.FsEntity({ path: "", name: "C:", children: [], isDirectory: true, isFile: false, isUpDir: false });
     self.fsStructure = startingFsEntity;
     self.loadFsEntity(self.fsStructure);
     ko.applyBindings(fileViewModel);
