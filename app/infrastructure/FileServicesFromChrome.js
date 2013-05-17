@@ -1,5 +1,12 @@
-﻿define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
-    console.log("/app/infrastructure/FileServices.js");
+﻿define(["infrastructure/LogServices", "infrastructure/AjaxQueueServices"], function (logServices, ajaxQueueServices) {
+    "use strict";
+    //#region Internal Methods
+
+    function log() { [].unshift.call(arguments, "/app/infrastructure/FileServicesFromChrome"); logServices.log.apply(null, arguments); }
+
+    //#endregion
+
+    log();
 
     // NOTE: Requires chrome to start with "--allow-file-access-from-files"
     function getStructure(path, parent, depth) {

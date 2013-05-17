@@ -2,10 +2,18 @@
     urlArgs: "noCache=" + (new Date()).getTime()// This prevents caching -- it is useful for debugging, but can be turned off for production
 });
 
-define(['infrastructure/FileServices', 'viewmodels/FileViewModel'], function (filesServices, fileViewModel) {
-    console.log("/app/main-for-fileviewmodel.js");
+define(["infrastructure/LogServices", 'infrastructure/FileServices', 'viewmodels/FileViewModel'], function (logServices, fileServices, fileViewModel) {
+    "use strict";
 
-    var self = this;
+    //#region Internal Methods
+
+    function log() { [].unshift.call(arguments, "/app/infrastructure/FileServices"); logServices.log.apply(null, arguments); }
+
+    //#endregion
+
+    log();
+
+    var self = {};
 
     //fileViewModel.currentVideoPath = ko.observable();
 
@@ -31,8 +39,22 @@ define(['infrastructure/FileServices', 'viewmodels/FileViewModel'], function (fi
         refreshCurrentFsDirectory();
         self.refreshCurrentSearchFilter();
     };
-    var startingFsEntity = new filesServices.FsEntity({ path: "", name: "C:", children: [], isDirectory: true, isFile: false, isUpDir: false });
-    self.fsStructure = startingFsEntity;
-    self.loadFsEntity(self.fsStructure);
+
     ko.applyBindings(fileViewModel);
+
+    // Initialize the route handler
+    var app = Sammy();
+
+    app.get('#/', function () { });
+
+    app.get('#/path/:path/:name', function () {
+        log("app.get('#/path/:path/:name'", this.params);
+        fileViewModel.fsStructure = new fileServices.FsEntity({ path: this.params['path'], name: this.params['name'], children: [], isDirectory: true, isFile: false, isUpDir: false });
+        log("app.get('#/path/:path/:name'", "fileViewModel.fsStructure", fileViewModel.fsStructure);
+        fileViewModel.loadFsEntity(fileViewModel.fsStructure);
+    });
+
+    // start the application
+    app.run('#' + '/path/' + encodeURIComponent("c:\\") + '/' + encodeURIComponent("windows"));
+    //app.run('#/');
 });

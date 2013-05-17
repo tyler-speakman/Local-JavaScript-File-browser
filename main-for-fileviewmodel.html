@@ -8,6 +8,7 @@
     <script src="scripts/underscore.js"></script>
     <script src="scripts/toastr.js"></script>
     <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/sammy-0.7.4.js"></script>
     <script src="scripts/require.js" data-main="app/main-for-fileviewmodel"></script>
 
     <link href="content/bootstrap.css" rel="stylesheet" />
@@ -46,7 +47,7 @@
                                 <span class="divider">\</span>
                                 <!-- /ko -->
                                 <!-- ko if: isLast -->
-                                <span class="badge badge-info" data-bind="text: currentFsDirectoryChildren().length"></span>
+                                <span class="badge badge-info" data-bind="text: $parent.currentFsDirectoryChildren().length"></span>
                                 <!-- /ko -->
                             </li>
                         </ul>
@@ -111,7 +112,7 @@
                             <i data-bind="css: { 'icon-exclamation-sign': !$data.isAccessible }"></i>
                             <span data-bind="with: $data.size" class="label label-info"><span data-bind="    text: $data"></span></span>
                             <span data-bind="with: $data.lastModifiedDate" class="label label-info"><span data-bind="    text: $data.toLocaleString()"></span></span>
-                            <span data-bind="with: $data.type, click: addSearchFilter.bind($data, { key: 'type', value: $data.type })" class="label label-info clickable"><span data-bind="    text: $data"></span></span>
+                            <span data-bind="with: $data.type, click: $parent.addSearchFilter.bind($data, { key: 'type', value: $data.type })" class="label label-info clickable"><span data-bind="    text: $data"></span></span>
                         </a>
                     </li>
                 </ul>

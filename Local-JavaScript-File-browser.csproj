@@ -68,6 +68,7 @@
     <Content Include="app\infrastructure\AjaxQueueServices.js" />
     <Content Include="app\infrastructure\MediaServices.js" />
     <Content Include="app\main-for-fileviewmodel.js" />
+    <Content Include="app\models\FileModels.js" />
     <Content Include="app\models\MediaModels.js" />
     <Content Include="app\viewmodels\MediaViewModel.js" />
     <Content Include="app\viewmodels\FileViewModel.js" />
@@ -89,6 +90,7 @@
     <Content Include="scripts\moment.js" />
     <Content Include="scripts\moment.min.js" />
     <Content Include="scripts\require.js" />
+    <Content Include="scripts\sammy-0.7.4.js" />
     <Content Include="scripts\toastr.js" />
     <Content Include="scripts\toastr.min.js" />
     <Content Include="scripts\underscore.js" />

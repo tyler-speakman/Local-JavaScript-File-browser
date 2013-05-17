@@ -1,5 +1,12 @@
-﻿define(["infrastructure/AjaxQueueServices"], function (ajaxQueueServices) {
-    console.log("/app/infrastructure/FileServices.js");
+﻿define(["infrastructure/LogServices", "infrastructure/AjaxQueueServices"], function (logServices, ajaxQueueServices) {
+    "use strict";
+    //#region Internal Methods
+
+    function log() { [].unshift.call(arguments, "/app/infrastructure/FileServicesFromNodeJS"); logServices.log.apply(null, arguments); }
+
+    //#endregion
+
+    log();
 
     function getStructure(path, parent, depth) {
         var promise = $.Deferred();

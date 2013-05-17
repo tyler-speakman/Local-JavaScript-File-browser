@@ -1,17 +1,9 @@
 ﻿/*global console, define*/
 define(
-    [
-        "infrastructure/LogServices"
-    ],
+    ["infrastructure/LogServices"],
     function (logServices) {
-        log();
-
-        return {
-            Video: Video,
-            PartialVideo: PartialVideo,
-            mapToVideo: mapToVideo,
-            mapToPartialVideo: mapToPartialVideo
-        };
+        "use strict";
+        //#region Internal Methods
 
         function PartialVideo() {
             var self = this;
@@ -51,8 +43,17 @@ define(
             return _.pick(value, _(new Video()).keys());
         }
 
+        function log(message, title) { logServices.log(message, title, "/app/infrastructure/MediaModels"); }
+
         //#endregion
 
-        function log(message, title) { logServices.log(message, title, "/app/infrastructure/MediaModels"); }
+        log();
+
+        return {
+            Video: Video,
+            PartialVideo: PartialVideo,
+            mapToVideo: mapToVideo,
+            mapToPartialVideo: mapToPartialVideo
+        };
     }
 );
