@@ -6,7 +6,19 @@ define(
         //#region Internal Methods
 
         function InaccessibleFsEntity() {
-            return new FsEntity({ path: "NA", name: "NA", encodedName: "NA", isDirectory: false, isFile: false, isUpdir: false, isAccessible: false, size: NaN });
+            return new FsEntity({ path: "NA", name: "NA", isDirectory: false, isFile: false, isUpdir: false, isAccessible: false, size: NaN });
+        }
+
+        function FileFsEntity(path, name) {
+            return new FsEntity({ path: path, name: name, isDirectory: false, isFile: true, isUpdir: false, isAccessible: false, size: NaN });
+        }
+
+        function DirectoryFsEntity(path, name) {
+            return new FsEntity({ path: path, name: name, isDirectory: true, isFile: false, isUpdir: false, isAccessible: false, size: NaN });
+        }
+
+        function UpDirFsEntity(path) {
+            return new FsEntity({ path: path, name: "..", isDirectory: true, isFile: false, isUpdir: true, isAccessible: false, size: NaN });
         }
 
         function FsEntity(o) {

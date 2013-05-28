@@ -13,7 +13,7 @@
 
     self.getStructure = function (path, parent, depth) {
         var promise = $.Deferred();
-        fileServicesFromNodeJs.getStructure(path, parent, 0)
+        fileServicesFromNodeJs.getStructure(path, parent, 1)
         //fileServicesFromChrome.getStructure(path, parent, 0)
             .done(handleUrlResponseSuccess)
             .fail(handleUrlResponseFailure);
@@ -22,10 +22,14 @@
         //#region Internal Methods
 
         function handleUrlResponseSuccess(fsEntities) {
+            //// Validate
+            //if (fsEntities === undefined || fsEntities === null) {
+            //    return;
+            //}
+
             parent.children = [];
             parent.isAccessible = true;
             var fsEntitySubRequestPromises = [];
-            var hasUpDir = false;
             var index = fsEntities.length;
             while (index--) {
                 var fsEntity = new fileModels.FsEntity(fsEntities[index]);
@@ -38,12 +42,6 @@
                     var fsEntitySubRequestPromise = getStructure(fsEntityFullPath, fsEntity, subRequestDepth);
                     fsEntitySubRequestPromises.push(fsEntitySubRequestPromise);
                 }
-                if (isUpDir) { hasUpDir = true; }
-            }
-
-            // If an "upDir" / "parent-directory" reference wasn't found (but should exist), then insert one
-            if (!hasUpDir && parent.path.length > 0) {
-                parent.children.push(new fileModels.FsEntity({ path: parent.path + parent.name, name: "..", isDirectory: true, isFile: false, isUpDir: true, isAccessible: true, parent: parent }));
             }
 
             // When all sub directory requests are complete, then resolve parent promise

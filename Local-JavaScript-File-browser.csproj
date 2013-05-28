@@ -57,6 +57,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app-tests\infrastructure\FileServicesTests.js" />
+    <Content Include="app-tests\infrastructure\LogServicesTests.js" />
+    <Content Include="app-tests\main.js" />
+    <Content Include="app-tests\qunit-1.11.0.css" />
+    <Content Include="app-tests\scripts\qunit-1.11.0.js" />
+    <Content Include="app-tests\scripts\sinon-1.6.0.js" />
+    <Content Include="app-tests\scripts\sinon-qunit-1.0.0.js" />
+    <Content Include="app-tests\tests.html" />
     <Content Include="app\infrastructure\FileServices.js" />
     <Content Include="app\infrastructure\FileServicesFromNodeJS.js" />
     <Content Include="app\infrastructure\MediaServicesFromOmdbApiCom.js" />
@@ -108,6 +116,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -35,7 +35,7 @@
             if (fsEntity.children) { fsEntity.children = applyFsSort(fsEntity.children); }
 
             // Sort entities as follows: "Up Directory" links first, directorys secound, everything else third (and of course ascending alpha-numerics)
-            return ((fsEntity.isUpDir) ? "0" : "1") + ((fsEntity.isDirectory) ? "0" : "1") + fsEntity.name;
+            return ((fsEntity.isAccessible) ? "0" : "1") + ((fsEntity.isUpDir) ? "0" : "1") + ((fsEntity.isDirectory) ? "0" : "1") + fsEntity.name;
         }
 
         //#endregion
@@ -72,7 +72,7 @@
     // Properties
     self.fsStructure;// = new fileServices.FsEntity();
     self.currentFsEntityAncestry = ko.observableArray();
-    self.currentFsDirectory = ko.observable(self.fsStructure);
+    self.currentFsDirectory = ko.observable();//ko.observable(self.fsStructure);
     self.currentFsDirectoryChildren = ko.observableArray([]);
     self.currentSearchFilter = ko.observableArray([]);//ko.observableArray([{ key: "name", value: "^.+\.mp4$" }, { key: "type", value: "^video\/.+$" }]);
     self.selectedFsEntity = ko.observable();
@@ -149,8 +149,12 @@
         self.currentFsEntityAncestry(self.currentFsDirectory().hierarchy());
     };
     self.refreshCurrentFsDirectory = function () {
-        log("refreshCurrentFsDirectory()", self.currentFsDirectoryChildren(), self.currentFsDirectory().children);
+        log("refreshCurrentFsDirectory()", self.currentFsDirectoryChildren(), self.currentFsDirectory());
+
         self.currentFsDirectoryChildren([]);// Reset, to force full rebind
+
+        if (!self.currentFsDirectory()) { return; }
+
         var fsDirectoryChildren = _(self.currentFsDirectory().children).filter(applySearchFilters);
         self.currentFsDirectoryChildren(fsDirectoryChildren);
         //self.currentFsDirectoryChildren.valueHasMutated();

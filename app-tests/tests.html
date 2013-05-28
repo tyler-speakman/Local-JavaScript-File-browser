@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit</title>
+
+    <script src="../Scripts/underscore.js"></script>
+    <script src="../Scripts/jquery-1.9.1.js"></script>
+    <script src="../Scripts/knockout-2.2.1.debug.js"></script>
+    <!--<script src="/scripts/lawnchair-0.6.1.js"></script>-->
+    <script src="../scripts/toastr.js"></script>
+    <script src="scripts/qunit-1.11.0.js"></script>
+    <!--sinon integration seems to generate issues with asynctest-->
+    <script src="scripts/sinon-1.6.0.js"></script>
+    <script src="scripts/sinon-qunit-1.0.0.js"></script>
+
+    <script src="../scripts/require.js" data-main="main"></script>
+
+    <link href="qunit-1.11.0.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script type="text/javascript">
+        /*global $, _, QUnit, require, sinon, module, test, asyncTest, equal, ok*/
+        sinon.config.useFakeTimers = false;
+    </script>
+</body>
+</html>

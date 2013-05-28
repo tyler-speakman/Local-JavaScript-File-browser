@@ -2,16 +2,23 @@
     urlArgs: "noCache=" + (new Date()).getTime()// This prevents caching -- it is useful for debugging, but can be turned off for production
 });
 
-define(["infrastructure/LogServices", 'infrastructure/FileServices', 'viewmodels/FileViewModel'], function (logServices, fileServices, fileViewModel) {
+define([
+        "infrastructure/LogServices",
+        'infrastructure/FileServices',
+        'viewmodels/FileViewModel',
+        'viewmodels/MediaViewModel'
+], function (logServices, fileServices, fileViewModel, mediaViewModel) {
     "use strict";
 
     //#region Internal Methods
 
-    function log() { [].unshift.call(arguments, "/app/infrastructure/main-for-fileviewmodel"); logServices.log.apply(null, arguments); }
+    function log() { [].unshift.call(arguments, "/app/infrastructure/main"); logServices.log.apply(null, arguments); }
 
     //#endregion
 
     log();
+
+    //#region Router
 
     // Initialize the route handler
     var router = Sammy();
@@ -28,10 +35,16 @@ define(["infrastructure/LogServices", 'infrastructure/FileServices', 'viewmodels
         fileViewModel.fsStructure = new fileServices.FsEntity({ path: "c:\\", name: "", children: [], isDirectory: true, isFile: false, isUpDir: false });
         fileViewModel.loadFsEntity(fileViewModel.fsStructure);
     });
-    // start the application
+
+    // Start the application
     router.run('#/');
 
-    var self = {};
+    //#endregion
+
+    //#region FileViewModel
+
+    // Apply video filter by default
+    fileViewModel.addSearchFilter({ key: "type", value: "video/.*" });
 
     fileViewModel.handleAddSearchFilterClick = function (data, event) {
         fileViewModel.addSearchFilter();
@@ -55,5 +68,16 @@ define(["infrastructure/LogServices", 'infrastructure/FileServices', 'viewmodels
         }
     });
 
-    ko.applyBindings(fileViewModel);
+    mediaViewModel.handleSearchClick = function (data, event) {
+        var fsEntity = data;
+        var name = fsEntity.name.replace(fsEntity.extension, "");
+        mediaViewModel.search(name);
+    };
+
+    //#endregion
+
+    var self = {};
+    self = _.extend(self, fileViewModel, mediaViewModel);
+
+    ko.applyBindings(self);
 });

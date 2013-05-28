@@ -1,7 +1,8 @@
 ﻿define(['infrastructure/LogServices', 'infrastructure/MediaServices'], function (logServices, mediaServices) {
+    "use strict";
     log();
 
-    var self = this;
+    var self = {};
 
     // Properties
     self.search = ko.observable();
