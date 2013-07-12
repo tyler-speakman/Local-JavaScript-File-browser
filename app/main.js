@@ -23,18 +23,31 @@ define([
     // Initialize the route handler
     var router = Sammy();
 
-    router.get('#/path/:path/:name', function () {
-        log("app.get('#/path/:path/:name'", this.params);
-        fileViewModel.fsStructure = new fileServices.FsEntity({ path: this.params['path'], name: this.params['name'], children: [], isDirectory: true, isFile: false, isUpDir: false });
-        log("app.get('#/path/:path/:name'", "fileViewModel.fsStructure", fileViewModel.fsStructure);
+    function initFromRouter(path, name){
+        console.log("!!!!!!!!!!!!!!!!!!!");
+        console.log(path, name);
+
+        fileViewModel.fsStructure = new fileServices.FsEntity({ path: path, name: name, children: [], isDirectory: true, isFile: false, isUpDir: false });
         fileViewModel.loadFsEntity(fileViewModel.fsStructure);
+    }
+
+    router.get('#/path/:path/:name', function () {
+        console.log("app.get('#/path/:path/:name')", this.params);
+        initFromRouter(this.params['path'], this.params['name']);
+    });
+
+    router.get('#/path/:path(.*)', function () {
+        console.log("app.get('#/path/:path')", this.params);
+        initFromRouter(this.params['path'], "");
     });
 
     router.get('#/.*', function () {
+        console.log("app.get(''#/.*')");
         // Display C:\ by default
-        fileViewModel.fsStructure = new fileServices.FsEntity({ path: "c:\\", name: "", children: [], isDirectory: true, isFile: false, isUpDir: false });
-        fileViewModel.loadFsEntity(fileViewModel.fsStructure);
+        initFromRouter("c:\\", "");
     });
+
+
 
     // Start the application
     router.run('#/');
@@ -70,13 +83,23 @@ define([
 
     mediaViewModel.handleSearchClick = function (data, event) {
         var fsEntity = data;
-        var name = fsEntity.name.replace(fsEntity.extension, "");
+        var name = fsEntity.name.replace('.' + fsEntity.extension, "");
         mediaViewModel.search(name);
     };
+
+    mediaViewModel.selectedSearchResult.subscribe(function (selectedSearchResult) {
+        if (selectedSearchResult) {
+            $('#selectedSearchResultModal').modal('show');
+        } else {
+            $('#selectedSearchResultModal').modal('hide');
+        }
+    });
 
     //#endregion
 
     var self = {};
+
+    // Merge the fileViewModel and mediaViewModel -- thus was born a GOD VIEWMODEL! ..This feels like a lesson that I'm about to learn.
     self = _.extend(self, fileViewModel, mediaViewModel);
 
     ko.applyBindings(self);

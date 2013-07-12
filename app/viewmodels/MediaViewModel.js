@@ -31,9 +31,36 @@
         }
     });
 
+    self.selectVideoSearchResult = function (videoSearchResult) {
+        log(videoSearchResult);
+
+        mediaServices.getDetailsById(videoSearchResult.id)
+            .then(function (response) {
+                videoSearchResult = response; //_(videoSearchResult).extend(response);
+                self.selectedSearchResult(videoSearchResult);
+            });
+
+        self.resetSearch();
+
+        // Set selected item
+        self.selectedSearchResult(videoSearchResult);
+
+        // Add selected item to history
+        if (!_(self.selectedSearchResultsHistory()).contains(videoSearchResult)) {
+            self.selectedSearchResultsHistory.push(videoSearchResult);
+        }
+    };
+
+    self.resetSearch = function () {
+        // Clear search
+        self.search("");
+        self.searchResults([]);
+        self.selectedSearchResult(null);
+    };
+
     // Methods
 
-    bindEventToList('body', '.media-search-result', selectVideoSearchResult, 'click');
+    bindEventToList('body', '.media-search-result', self.selectVideoSearchResult, 'click');
 
     $('body').on('keypress', ".media-search-results", function (event) {
         if (event.which == 13) { event.preventDefault(); }
@@ -43,7 +70,7 @@
     $('body').on('blur', '.media-search-results', function () {
         var searchResult = self.searchResults()[this.selectedIndex];//ko.dataFor(this.selected);
         if (searchResult === undefined) { return; }
-        selectVideoSearchResult(searchResult);
+        self.selectVideoSearchResult(searchResult);
         return false;
     });
 
@@ -59,38 +86,6 @@
             callback(searchResult);
             return false;
         });
-    }
-
-    //function bindEventToSelectList(rootSelector, selector, callback, eventName) {
-    //    // Bind an event to all DOM elements of a specific class
-    //    eventName = eventName || 'blur';
-    //    $(rootSelector).on(eventName, selector, function () {
-    //        var searchResult = ko.dataFor(this);
-    //        callback(searchResult);
-    //        return false;
-    //    });
-    //}
-
-    function selectVideoSearchResult(videoSearchResult) {
-        log(videoSearchResult);
-
-        mediaServices.getDetailsById(videoSearchResult.id)
-            .then(function (response) {
-                videoSearchResult = response;//_(videoSearchResult).extend(response);
-                self.selectedSearchResult(videoSearchResult);
-            });
-
-        // Set selected item
-        self.selectedSearchResult(videoSearchResult);
-
-        // Clear search
-        self.search("");
-        self.searchResults([]);
-
-        // Add selected item to history
-        if (!_(self.selectedSearchResultsHistory()).contains(videoSearchResult)) {
-            self.selectedSearchResultsHistory.push(videoSearchResult);
-        }
     }
 
     //#endregion

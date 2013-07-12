@@ -9,10 +9,10 @@ body {
     padding-top: 40px;
 }
 
-.not-clickable {
+.not-clickable, .nav .not-clickable {
     cursor: default;
 }
 
-.clickable {
+.clickable, .nav .clickable {
     cursor: pointer;
 }
